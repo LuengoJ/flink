@@ -2,7 +2,6 @@ package com.example;
 
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
@@ -10,9 +9,7 @@ import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
-import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.kafka.common.protocol.types.Field.Int16;
+
 
 public class JobkafkaSimpleConsume {
 
@@ -50,7 +47,7 @@ public class JobkafkaSimpleConsume {
         JobkafkaSimpleConsume job = new JobkafkaSimpleConsume();
 
         // Kafka's data consumption process and the processing that will be performed on that data.
-        job.consumejob(env);
+        job.reducejob(env);
 
         // Starts the application execution and starts processing data streams
         env.execute("ConsumeKafka");
@@ -62,7 +59,9 @@ public class JobkafkaSimpleConsume {
      * @param env The StreamExecutionEnvironment to use for creating the data stream.
      */
 
-    private void consumejob(StreamExecutionEnvironment env){
+
+    
+    void reducejob(StreamExecutionEnvironment env){
 
         // Define a DataStream to consume data from a Kafka source
         DataStream<Integer> numbers = env.fromSource(
